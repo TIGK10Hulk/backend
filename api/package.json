@@ -1,0 +1,37 @@
+{
+  "name": "dorisapi",
+  "version": "1.0.0",
+  "description": "This is the RESTful API which handles the communication for the Doris robot and the whole backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TIGK10Hulk/backend.git"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "nodejs",
+    "rest",
+    "api",
+    "backend",
+    "tigk10",
+    "team",
+    "hulk",
+    "husqvarna"
+  ],
+  "author": "Team Hulk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TIGK10Hulk/backend/issues"
+  },
+  "homepage": "https://github.com/TIGK10Hulk/backend#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
