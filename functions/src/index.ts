@@ -1,12 +1,25 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const express = require('express')
 
+const app = express()
 admin.initializeApp();
+
 
 //0.5 sec mellanrum?
 //vi får x,y,collBool
 //{x: x, y: y, collBool: true}
 //
+
+app.get('/test', (req: any, res: any) => {
+    res.send("Hello from express!")
+})
+
+const api = functions.https.onRequest(app)
+
+module.exports = {
+    api
+}
 
 export const helloWorld = functions.https.onRequest((request: any, response: any) => {
     console.log("Hello everybody!")
@@ -25,11 +38,11 @@ exports.addMessage = functions.https.onRequest(async (req: any, res: any) => {
     res.send("Added textinput to database!");
 });
 
-export const storeCoordinates = functions.https.onRequest(async (req: any, res:any) => {
+
+export const storeCoordinates = functions.https.onRequest(async (req: any, res: any) => {
     //desirilize json object to a custom-made Object POGO
-    const jsonObj = req.body
+    //const jsonObj = req.body
     //validate
     //place POGO objects coordinates into db
     //resolve
-
 })
