@@ -3,6 +3,11 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
+//0.5 sec mellanrum?
+//vi får x,y,collBool
+//{x: x, y: y, collBool: true}
+//
+
 export const helloWorld = functions.https.onRequest((request: any, response: any) => {
     console.log("Hello everybody!")
     response.send("Hello from Fredric Lundberg! hihi");
@@ -20,4 +25,11 @@ exports.addMessage = functions.https.onRequest(async (req: any, res: any) => {
     res.send("Added textinput to database!");
 });
 
+export const storeCoordinates = functions.https.onRequest(async (req: any, res:any) => {
+    //desirilize json object to a custom-made Object POGO
+    const jsonObj = req.body
+    //validate
+    //place POGO objects coordinates into db
+    //resolve
 
+})
