@@ -1,48 +1,36 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const express = require('express')
-const bodyParser = require('body-parser')
+//const express = require('express');
+const bodyParser = require('body-parser');
+import express = require('express');
+import { IPosition } from './IPosition';
 
 const app = express()
 app.use(bodyParser.json())
 admin.initializeApp();
 
 
-//0.5 sec mellanrum?
-//vi får x,y,collBool
-//{x: x, y: y, collBool: true}
-//
+app.post('/position', async (req: express.Request, res: express.Response) => {
 
-app.get('/test', (req: any, res: any) => {
-    res.send("Hello from express!")
-})
-
-app.get('/coord', (req: any, res: any) => {
-    res.send("Coord is routed in express!")
-})
-
-interface MyCoordObj {
-    xCoord: string;
-    yCoord: string;
-    isCollision: boolean;
-}
-
-app.post('/position', async (req: any, res: any) => {
-    let body = req.body
+    if(req.method != 'POST') {
+        res.status(500).json({
+            message: "Not allowed"
+        })
+        return 
+    }
     
-    console.log("req body: "+req.body)
-
-    const coordObj: MyCoordObj = body
+    const body = req.body
+    const coordObj: IPosition = body;
     
-    await admin.database().ref('/positions').push({coordObj})
-    res.send("Hopefully added coordiantes in db")
+    await admin.database().ref('/positions').push({position: coordObj})
+    res.status(200).json({
+        message: "Position stored successfully in database"
+    })
 })
 
 const api = functions.https.onRequest(app)
 
-module.exports = {
-    api
-}
+
 
 export const helloWorld = functions.https.onRequest((request: any, response: any) => {
     console.log("Hello everybody!")
@@ -69,3 +57,8 @@ export const storeCoordinates = functions.https.onRequest(async (req: any, res: 
     //place POGO objects coordinates into db
     //resolve
 })
+
+
+module.exports = {
+    api
+}
