@@ -4,6 +4,7 @@ const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 import express = require('express');
 import { IPosition } from './IPosition';
+import { Position } from './Position';
 
 const app = express()
 app.use(bodyParser.json())
@@ -20,15 +21,31 @@ app.post('/position', async (req: express.Request, res: express.Response) => {
     }
     
     const body = req.body
-    const coordObj: IPosition = body;
+    const requestPosition: IPosition = body;
     
-    await admin.database().ref('/positions').push({position: coordObj})
+    //validate the sended position here then continue
+
+    const positionObj : IPosition = new Position(
+        requestPosition.xCoord, requestPosition.yCoord, requestPosition.isCollision
+    );
+
+    positionObj.addDateToPosition(requestPosition)
+    .then((position) => {
+        admin.database().ref('/positions').push({position: position})
+    })
+    .catch(() => {
+        res.status(500).json({
+            message: "Problem in class Position"
+        })
+    })
+    
+    //await admin.database().ref('/positions').push({position: positionObj})
+
     res.status(200).json({
         message: "Position stored successfully in database"
     })
 })
 
-const api = functions.https.onRequest(app)
 
 
 
@@ -58,7 +75,7 @@ export const storeCoordinates = functions.https.onRequest(async (req: any, res: 
     //resolve
 })
 
-
+const api = functions.https.onRequest(app)
 module.exports = {
     api
 }
