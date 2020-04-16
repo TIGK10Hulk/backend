@@ -13,7 +13,7 @@ admin.initializeApp();
 
 app.post('/position', async (req: express.Request, res: express.Response) => {
 
-    if(req.method != 'POST') {
+    if(req.method !== 'POST') {
         res.status(500).json({
             message: "Not allowed"
         })
@@ -25,29 +25,26 @@ app.post('/position', async (req: express.Request, res: express.Response) => {
     
     //validate the sended position here then continue
 
-    const positionObj : IPosition = new Position(
-        requestPosition.xCoord, requestPosition.yCoord, requestPosition.isCollision
-    );
+    const positionObj : IPosition = new Position();
 
     positionObj.addDateToPosition(requestPosition)
     .then((position) => {
         admin.database().ref('/positions').push({position: position})
+        
+        res.status(200).json({
+            message: "Position stored successfully in database"
+        })
     })
-    .catch(() => {
+    .catch((error) => {
         res.status(500).json({
-            message: "Problem in class Position"
+            message: "Problem in class Position ${error}"
         })
     })
     
     //await admin.database().ref('/positions').push({position: positionObj})
 
-    res.status(200).json({
-        message: "Position stored successfully in database"
-    })
+    
 })
-
-
-
 
 export const helloWorld = functions.https.onRequest((request: any, response: any) => {
     console.log("Hello everybody!")

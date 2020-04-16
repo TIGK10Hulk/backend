@@ -4,15 +4,15 @@ import { DateHandler } from './DateHandler';
 
 
 export class Position implements IPosition {
-    xCoord: string;
-    yCoord: string;
-    isCollision: boolean;
+    xCoord?: string;
+    yCoord?: string;
+    isCollision?: boolean;
     stamp?: number;
 
     constructor(
-        xCoord: string, 
-        yCoord: string, 
-        isCollision: boolean, 
+        xCoord?: string, 
+        yCoord?: string, 
+        isCollision?: boolean, 
         stamp? : number,
     ) 
     {
@@ -22,9 +22,7 @@ export class Position implements IPosition {
         this.stamp = stamp;
     }
 
-    //await new Promise(resolve => setTimeout(resolve, 5000))
-
-    async addDateToPosition(requestPosition: IPosition): Promise<IPosition> {
+    async addDateToPosition(requestPosition: IPosition) : Promise<IPosition> {
         
         try {
             const dateobject: IDateHandler = new DateHandler();
@@ -32,10 +30,12 @@ export class Position implements IPosition {
 
             requestPosition.stamp = milliseconds;
         } catch (error) {
-            
+            throw new Error("Error, Thrown from Position")
         }
         return requestPosition;  
     }
+
+    
     
 
 }
