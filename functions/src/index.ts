@@ -27,17 +27,14 @@ interface MyCoordObj {
     isCollision: boolean;
 }
 
-app.post('/saveCoord', async (req: any, res: any) => {
+app.post('/position', async (req: any, res: any) => {
     let body = req.body
     
     console.log("req body: "+req.body)
 
     const coordObj: MyCoordObj = body
-    //JSON.parse(body)
-    console.log(coordObj.xCoord)
-    console.log(coordObj)
-
-    await admin.database().ref('/prevplaces').push({coordx: coordObj.xCoord})
+    
+    await admin.database().ref('/positions').push({coordObj})
     res.send("Hopefully added coordiantes in db")
 })
 
