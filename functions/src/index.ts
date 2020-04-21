@@ -1,12 +1,12 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-const bodyParser = require('body-parser');
-
 import express = require('express');
 import { IPosition } from './IPosition';
 import { Position } from './Position';
 
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const bodyParser = require('body-parser');
 const app = express();
+
 app.use(bodyParser.json());
 admin.initializeApp();
 
@@ -68,7 +68,7 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
 app.post('/positions', async (req: express.Request, res: express.Response) => {
 
     if(req.method !== 'POST') {
-        res.status(500).json({
+        res.status(400).json({
             message: "Not allowed"
         })
         return 
