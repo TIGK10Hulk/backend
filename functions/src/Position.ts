@@ -34,8 +34,4 @@ export class Position implements IPosition {
         }
         return requestPosition;  
     }
-
-    
-    
-
 }

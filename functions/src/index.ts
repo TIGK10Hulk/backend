@@ -6,12 +6,12 @@ import express = require('express');
 import { IPosition } from './IPosition';
 import { Position } from './Position';
 
-const app = express()
-app.use(bodyParser.json())
+const app = express();
+app.use(bodyParser.json());
 admin.initializeApp();
 
 // GET all positions
-app.get('/positions', async (req: any, res: any) => {
+app.get('/positions', async (req: express.Request, res: express.Response) => {
 
     if(req.method !== 'GET') {
         res.status(400).json({
@@ -20,13 +20,17 @@ app.get('/positions', async (req: any, res: any) => {
         return 
     };
 
-    var db = admin.database();
-    var ref = db.ref("/positions");
+    const db = admin.database();
+    const ref = db.ref("/positions");
+    let positionsArray: any[] = [];
 
-    ref.on("value", function(snapshot: any) {
-        res.status(200).json({
-            positionsArray: snapshot.val()
-        })
+    ref.once("value", function(snapshot: any) {
+
+        snapshot.forEach(function(childSnapshot: any) {
+            positionsArray.push(childSnapshot.val());
+        });
+        res.status(200).json(positionsArray)
+
     }, function (errorObject: any) {
         res.status(500).json({
             message: "Error: " + errorObject.message()
@@ -34,6 +38,7 @@ app.get('/positions', async (req: any, res: any) => {
     });
 });
 
+// POST new position
 app.post('/positions', async (req: express.Request, res: express.Response) => {
 
     if(req.method !== 'POST') {
@@ -45,9 +50,6 @@ app.post('/positions', async (req: express.Request, res: express.Response) => {
     
     const body = req.body
     const requestPosition: IPosition = body;
-    
-    //validate the sended position here then continue
-
     const positionObj : IPosition = new Position();
 
     positionObj.addDateToPosition(requestPosition)
