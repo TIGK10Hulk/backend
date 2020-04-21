@@ -38,6 +38,32 @@ app.get('/positions', async (req: express.Request, res: express.Response) => {
     });
 });
 
+// GET latest position
+app.get('/positions/latest', async (req: express.Request, res: express.Response) => {
+
+    if(req.method !== 'GET') {
+        res.status(400).json({
+            message: "Not allowed"
+        })
+        return 
+    };
+
+    const db = admin.database();
+    const ref = db.ref("positions");
+
+    ref.orderByChild("stamp").limitToLast(1).on("value", function(snapshot: any) {
+
+        snapshot.forEach(function(childSnapshot: any) {
+            res.status(200).json(childSnapshot.val());
+        })
+        
+    }, function (errorObject: any) {
+        res.status(500).json({
+            message: "Error: " + errorObject.message()
+        })
+    });
+});
+
 // POST new position
 app.post('/positions', async (req: express.Request, res: express.Response) => {
 
