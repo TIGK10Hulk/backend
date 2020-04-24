@@ -50,6 +50,43 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
 
     const db = admin.database();
     const ref = db.ref("positions");
+    var yeehaw: any;
+    var yeehaw2: any;
+    var yeehaw3: any;
+    
+    ref.orderByKey().limitToLast(1).on("value", function(snapshot: any) {
+
+        snapshot.forEach(function(childSnapshot: any) {
+            yeehaw = childSnapshot.key;
+            yeehaw2 = childSnapshot.val();
+            yeehaw3 = childSnapshot;
+        })
+
+        console.log("YEEHAW: " + yeehaw);
+        console.log("VAL: " + yeehaw2);
+        console.log("CHILDSNAPSHOT: " + yeehaw3);
+
+        res.status(200).json();
+        
+    }, function (errorObject: any) {
+        res.status(500).json({
+            message: "Error: " + errorObject.message()
+        })
+    });
+});
+
+// GET session with id param:{ID}
+app.get('/positions/latest/{sessionId}', async (req: express.Request, res: express.Response) => {
+
+    if(req.method !== 'GET') {
+        res.status(400).json({
+            message: "Not allowed"
+        })
+        return 
+    };
+
+    const db = admin.database();
+    const ref = db.ref("positions");
 
     ref.orderByChild("stamp").limitToLast(1).on("value", function(snapshot: any) {
 
@@ -80,7 +117,7 @@ app.post('/positions', async (req: express.Request, res: express.Response) => {
 
     positionObj.addDateToPosition(requestPosition)
     .then((position) => {
-        admin.database().ref('/positions').push({position: position})
+        admin.database().ref('/positions').child(body.session).push(position)
         
         res.status(200).json({
             message: "Position stored successfully in database"
@@ -91,7 +128,6 @@ app.post('/positions', async (req: express.Request, res: express.Response) => {
             message: "Problem in class Position ${error}"
         })
     })
-    
 })
 
 const api = functions.https.onRequest(app)
