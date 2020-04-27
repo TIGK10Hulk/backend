@@ -5,7 +5,7 @@
 
     // Force function overloads to be declared together. This ensures readers understand APIs.
     "adjacent-overload-signatures": true,
-
+    
     // Do not allow the subtle/obscure comma operator.
     "ban-comma-operator": true,
 
@@ -13,7 +13,7 @@
     "no-namespace": true,
 
     // Do not allow parameters to be reassigned. To avoid bugs, developers should instead assign new values to new vars.
-    "no-parameter-reassignment": true,
+    "no-parameter-reassignment": false,
 
     // Force the use of ES6-style imports instead of /// <reference path=> imports.
     "no-reference": true,

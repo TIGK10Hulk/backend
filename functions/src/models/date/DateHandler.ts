@@ -18,6 +18,4 @@ export class DateHandler implements IDateHandler {
         const time = this.date.getTime();
         return time;
     }
-
-    
 }

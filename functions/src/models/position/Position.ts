@@ -1,7 +1,6 @@
 import { IPosition } from './IPosition';
-import { IDateHandler } from './IDateHandler';
-import { DateHandler } from './DateHandler';
-
+import { DateHandler } from '../date/DateHandler';
+import { IDateHandler } from '../date/IDateHandler';
 
 export class Position implements IPosition {
     xCoord?: string;
