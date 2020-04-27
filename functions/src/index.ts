@@ -7,8 +7,12 @@ const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const app = express();
 
+
 app.use(bodyParser.json());
 admin.initializeApp();
+
+const db = admin.database();
+const ref = db.ref("positions");
 
 // GET all positions
 app.get('/positions', async (req: express.Request, res: express.Response) => {
@@ -20,8 +24,6 @@ app.get('/positions', async (req: express.Request, res: express.Response) => {
         return 
     };
 
-    const db = admin.database();
-    const ref = db.ref("/positions");
     let positionsArray: any[] = [];
 
     ref.once("value", function(snapshot: any) {
@@ -48,12 +50,10 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
         return 
     };
 
-    const db = admin.database();
-    const ref = db.ref("positions");
     var outerSnapshot: any;
     var innerSnapshot: any;
     
-    ref.orderByKey().limitToLast(1).on("value", function(snapshot: any) {
+    ref.orderByKey().limitToLast(1).once("value", function(snapshot: any) {
 
         snapshot.forEach(function(childSnapshot: any) {
             outerSnapshot = childSnapshot;
@@ -73,7 +73,7 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
 });
 
 // GET session with id param:{ID}
-app.get('/positions/latest/{sessionId}', async (req: express.Request, res: express.Response) => {
+app.get('/positions/:sessionId', async (req: express.Request, res: express.Response) => {
 
     if(req.method !== 'GET') {
         res.status(400).json({
@@ -82,14 +82,20 @@ app.get('/positions/latest/{sessionId}', async (req: express.Request, res: expre
         return 
     };
 
-    const db = admin.database();
-    const ref = db.ref("positions");
+    const sessionId = req.params.sessionId;
+    let positions: any;
 
-    ref.orderByChild("stamp").limitToLast(1).on("value", function(snapshot: any) {
+    ref.once("value", function(snapshot: any) {
 
-        snapshot.forEach(function(childSnapshot: any) {
-            res.status(200).json(childSnapshot.val());
-        })
+        if(snapshot.hasChild(sessionId.toString())) {
+            positions = snapshot.child(sessionId).val();
+        } else {
+            res.status(400).json({
+                message: "Error: No such ID exist for any session"
+            })
+        }
+
+        res.status(200).json({sessionId, positions});
         
     }, function (errorObject: any) {
         res.status(500).json({
