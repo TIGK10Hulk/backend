@@ -50,23 +50,20 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
 
     const db = admin.database();
     const ref = db.ref("positions");
-    var yeehaw: any;
-    var yeehaw2: any;
-    var yeehaw3: any;
+    var outerSnapshot: any;
+    var innerSnapshot: any;
     
     ref.orderByKey().limitToLast(1).on("value", function(snapshot: any) {
 
         snapshot.forEach(function(childSnapshot: any) {
-            yeehaw = childSnapshot.key;
-            yeehaw2 = childSnapshot.val();
-            yeehaw3 = childSnapshot;
+            outerSnapshot = childSnapshot;
         })
 
-        console.log("YEEHAW: " + yeehaw);
-        console.log("VAL: " + yeehaw2);
-        console.log("CHILDSNAPSHOT: " + yeehaw3);
+        outerSnapshot.forEach(function(childSnapshot: any) {
+            innerSnapshot = childSnapshot.val()
+        })
 
-        res.status(200).json();
+        res.status(200).json({"position": innerSnapshot});
         
     }, function (errorObject: any) {
         res.status(500).json({
