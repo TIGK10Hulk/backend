@@ -73,7 +73,7 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
 });
 
 // GET session with id param:{ID}
-app.get('/positions/:sessionId', async (req: express.Request, res: express.Response) => {
+app.get('/positions/session/:sessionId', async (req: express.Request, res: express.Response) => {
 
     if(req.method !== 'GET') {
         res.status(400).json({
