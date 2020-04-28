@@ -38,11 +38,11 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
 
     db.getLatestPositionLogged(positionsArray)
     .catch(error => res.status(500).json({message: "Error: " + error.message()}))
-    .then(() => res.status(200).json({positionsArray}))
+    .then(() => res.status(200).json(positionsArray[0]))
     .catch()
 });
 
 const api = functions.https.onRequest(app)
 module.exports = {
     api
-}
+};

@@ -7,18 +7,21 @@ export class Position implements IPosition {
     yCoord?: string;
     isCollision?: boolean;
     stamp?: number;
+    session?: string;
 
     constructor(
         xCoord?: string, 
         yCoord?: string, 
         isCollision?: boolean, 
         stamp? : number,
+        session? : string
     ) 
     {
-        this.xCoord = xCoord 
-        this.yCoord = yCoord 
-        this.isCollision = isCollision 
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
+        this.isCollision = isCollision;
         this.stamp = stamp;
+        this.session = session;
     }
 
     async addDateToPosition(requestPosition: IPosition) : Promise<IPosition> {

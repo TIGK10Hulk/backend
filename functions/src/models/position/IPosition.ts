@@ -3,6 +3,7 @@ export interface IPosition {
     yCoord?: string;
     isCollision?: boolean;
     stamp?: number;
+    session?: string;
 
     addDateToPosition(requestPosition: IPosition): Promise<IPosition>;
 }
