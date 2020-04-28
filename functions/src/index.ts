@@ -1,5 +1,6 @@
 import express = require('express');
 import { FirebaseDatabase } from './data-layer/repository';
+
 const functions = require('firebase-functions');
 const bodyParser = require('body-parser');
 const app = express();

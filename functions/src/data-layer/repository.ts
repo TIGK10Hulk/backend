@@ -12,6 +12,7 @@ const config = {
 firebase.initializeApp(config);
 
 export class FirebaseDatabase {
+
     db: any;
     ref: any;
 
