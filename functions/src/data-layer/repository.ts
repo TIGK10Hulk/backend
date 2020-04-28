@@ -13,8 +13,8 @@ firebase.initializeApp(config);
 
 export class FirebaseDatabase {
 
-    db: any;
-    ref: any;
+    db: firebase.database.Database;
+    ref: firebase.database.Reference;
 
     constructor() {
         this.db = firebase.database();
@@ -37,8 +37,6 @@ export class FirebaseDatabase {
                 tempArr.forEach(function(childSnapshot: any) {
                     positionsArray.push(childSnapshot);
                 })
-            } else {
-                console.log("Error")
             }
         });
     }
@@ -50,7 +48,7 @@ export class FirebaseDatabase {
         await this.ref.orderByKey().limitToLast(1).once("value", function(snapshot: any) {
 
             snapshot.forEach(function(childSnapshot: any) {
-                outerSnapshot = childSnapshot;
+                outerSnapshot = snapshot;
             })
     
             outerSnapshot.forEach(function(childSnapshot: any) {
