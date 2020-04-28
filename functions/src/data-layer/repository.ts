@@ -26,18 +26,31 @@ export class FirebaseDatabase {
         });
     }
 
-    async getPositionsFromSession(array: any, sessionId: any) : Promise<any> {
+    async getPositionsFromSession(positionsArray: any, sessionId: any) : Promise<any> {
         let tempArr: any;
 
         await this.ref.once("value", function(snapshot: any) {
             if(snapshot.hasChild(sessionId.toString())) {
                 tempArr = snapshot.child(sessionId);
                 tempArr.forEach(function(childSnapshot: any) {
-                    array.push(childSnapshot);
+                    positionsArray.push(childSnapshot);
                 })
             } else {
                 console.log("Error")
             }
+        });
+    }
+
+    async getLatestPositionLogged(positionsArray: any) : Promise<any> {
+        let outerSnapshot: any;    
+        await this.ref.orderByKey().limitToLast(1).once("value", function(snapshot: any) {
+
+            snapshot.forEach(function(childSnapshot: any) {
+                outerSnapshot = childSnapshot;
+            })
+            outerSnapshot.forEach(function(childSnapshot: any) {
+                positionsArray.push(childSnapshot.val());
+            })
         });
     }
 }

@@ -11,12 +11,6 @@ app.use(bodyParser.json());
 // GET all positions
 app.get('/positions', async (req: express.Request, res: express.Response) => {
     positionsArray = [];
-    if(req.method !== 'GET') {
-        res.status(400).json({
-            message: "Not allowed"
-        })
-        return 
-    };
 
     db.getAllPositions(positionsArray)
     .catch(error => res.status(500).json({message: "Error: " + error.message()}))
@@ -24,10 +18,10 @@ app.get('/positions', async (req: express.Request, res: express.Response) => {
     .catch()
 });
 
-// GET all positions
+// GET positions from specific id
 app.get('/positions/sessions/:id', async (req: express.Request, res: express.Response) => {
-    const sessionId = req.params.id;
     positionsArray = [];
+    const sessionId = req.params.id;
 
     db.getPositionsFromSession(positionsArray, sessionId)
     .catch(error => res.status(500).json({message: "Error: " + error.message()}))
@@ -35,6 +29,16 @@ app.get('/positions/sessions/:id', async (req: express.Request, res: express.Res
         "Id": sessionId,
         "positions": positionsArray,
     }))
+    .catch()
+});
+
+// GET latest position logged
+app.get('/positions/latest', async (req: express.Request, res: express.Response) => {
+    positionsArray = [];
+
+    db.getLatestPositionLogged(positionsArray)
+    .catch(error => res.status(500).json({message: "Error: " + error.message()}))
+    .then(() => res.status(200).json({positionsArray}))
     .catch()
 });
 
