@@ -1,25 +1,27 @@
 import { IPosition } from './IPosition';
-import { IDateHandler } from './IDateHandler';
-import { DateHandler } from './DateHandler';
-
+import { DateHandler } from '../date/DateHandler';
+import { IDateHandler } from '../date/IDateHandler';
 
 export class Position implements IPosition {
     xCoord?: string;
     yCoord?: string;
     isCollision?: boolean;
     stamp?: number;
+    session?: string;
 
     constructor(
         xCoord?: string, 
         yCoord?: string, 
         isCollision?: boolean, 
         stamp? : number,
+        session? : string
     ) 
     {
-        this.xCoord = xCoord 
-        this.yCoord = yCoord 
-        this.isCollision = isCollision 
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
+        this.isCollision = isCollision;
         this.stamp = stamp;
+        this.session = session;
     }
 
     async addDateToPosition(requestPosition: IPosition) : Promise<IPosition> {
