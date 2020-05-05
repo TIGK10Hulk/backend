@@ -2,6 +2,8 @@ import * as firebase from 'firebase';
 import { IPosition } from '../models/position/IPosition'
 import { Position } from '../models/position/Position'
 
+//const admin = require('firebase-admin')
+
 const config = {
     apiKey: "AIzaSyC0kt5tCZ2iaEHD_9MmG-95v8XkbSx6idQ",
     authDomain: "hulkdoris-4c6eb.firebaseapp.com",
@@ -69,12 +71,19 @@ export class FirebaseDatabase {
 
     async postPosition(body: any) : Promise<any> {
         const requestPosition: IPosition = body;    
-        const positionObj : IPosition = new Position();
-        const sessionId = positionObj.session;
+        let positionObj : IPosition = new Position();
+        
+        console.log("Position object: "+ positionObj)
+        
+        const sessionId = requestPosition.session;
+        console.log("SESSION: "+sessionId)
 
         positionObj.addDateToPosition(requestPosition)
         .then((position) => {
-            this.ref('/positions/'+sessionId).push({position: position})
+            console.log("Pos after Date: "+position)
+            this.db.ref('positions'+'/'+sessionId).push(position)
+        }).catch((error) => {
+            return false
         })
     }
 }

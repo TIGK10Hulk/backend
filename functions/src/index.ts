@@ -42,8 +42,9 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
 
 // POST position
 app.post('/positions', async (req: express.Request, res: express.Response) => {
+    console.log("Request body here: " + req.body)
     db.postPosition(req.body)
-    .catch(error => res.status(500).json({message: "Error: " + error.message()}))
+    .catch(error => res.status(500).json({message: "Error: " + error.message}))
     .then(() => res.status(200).json("Successfully posted position to session ID: "+req.body.session))
     .catch()
 });
