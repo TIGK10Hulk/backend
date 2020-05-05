@@ -66,4 +66,15 @@ export class FirebaseDatabase {
             positionsArray.push(position)
         });
     }
+
+    async postPosition(body: any) : Promise<any> {
+        const requestPosition: IPosition = body;    
+        const positionObj : IPosition = new Position();
+        const sessionId = positionObj.session;
+
+        positionObj.addDateToPosition(requestPosition)
+        .then((position) => {
+            this.ref('/positions/'+sessionId).push({position: position})
+        })
+    }
 }
