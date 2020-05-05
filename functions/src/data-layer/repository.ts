@@ -72,15 +72,10 @@ export class FirebaseDatabase {
     async postPosition(body: any) : Promise<any> {
         const requestPosition: IPosition = body;    
         let positionObj : IPosition = new Position();
-        
-        console.log("Position object: "+ positionObj)
-        
         const sessionId = requestPosition.session;
-        console.log("SESSION: "+sessionId)
 
         positionObj.addDateToPosition(requestPosition)
         .then((position) => {
-            console.log("Pos after Date: "+position)
             this.db.ref('positions'+'/'+sessionId).push(position)
         }).catch((error) => {
             return false

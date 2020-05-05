@@ -40,7 +40,7 @@ app.get('/positions/latest', async (req: express.Request, res: express.Response)
     .catch()
 });
 
-// POST position
+// POST position in json object format
 app.post('/positions', async (req: express.Request, res: express.Response) => {
     console.log("Request body here: " + req.body)
     db.postPosition(req.body)
@@ -48,6 +48,20 @@ app.post('/positions', async (req: express.Request, res: express.Response) => {
     .then(() => res.status(200).json("Successfully posted position to session ID: "+req.body.session))
     .catch()
 });
+
+// POST postions from a array in jsonstring format
+app.post('/positions/array', async (req: express.Request, res: express.Response) => {
+    const jsonarray = req.body
+    console.log("Jsonarray pos0: "+ jsonarray[0])
+
+    jsonarray.forEach((element: any) => {
+        db.postPosition(JSON.parse(element))
+        .catch(error => res.status(500).json({message: "Error: " + error.message}))
+        .then(() => res.status(200).json("Successfully posted positions: "))
+        .catch()
+    });
+})
+
 
 function resetArray(array: any) {
     array = []
