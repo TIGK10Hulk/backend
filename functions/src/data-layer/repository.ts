@@ -2,8 +2,6 @@ import * as firebase from 'firebase';
 import { IPosition } from '../models/position/IPosition'
 import { Position } from '../models/position/Position'
 
-//const admin = require('firebase-admin')
-
 const config = {
     apiKey: "AIzaSyC0kt5tCZ2iaEHD_9MmG-95v8XkbSx6idQ",
     authDomain: "hulkdoris-4c6eb.firebaseapp.com",
@@ -23,34 +21,40 @@ export class FirebaseDatabase {
         this.ref = this.db.ref("positions");
     }
 
-    async getAllPositions(positionsArray: any) : Promise<any> {
+    async getAllPositions() : Promise<any> {
+        const tempArr: any[] = [];
         await this.ref.once("value", function(snapshot: any) {
             snapshot.forEach(function(childSnapshot: any) {
-                positionsArray.push(childSnapshot.val());
+                tempArr.push(childSnapshot.val());
             });
         });
+        return tempArr;
     }
 
-    async getPositionsFromSession(positionsArray: any, sessionId: any) : Promise<any> {
+    async getPositionsFromSession(sessionId: any) : Promise<any> {
         let tempArr: any;
+        const positionsArr: any[] = [];
+
         await this.ref.once("value", function(snapshot: any) {
             if(snapshot.hasChild(sessionId.toString())) {
                 tempArr = snapshot.child(sessionId);
                 tempArr.forEach(function(childSnapshot: any) {
-                    positionsArray.push(childSnapshot);
+                    positionsArr.push(childSnapshot);
                 })
             }
         });
+        return positionsArr;
     }
 
-    async getLatestPositionLogged(positionsArray: any) : Promise<any> {
+    async getLatestPositionLogged() : Promise<any> {
         let outerSnapshot: any;
         let innerSnapshot: any;
+        let latestPosition: any;
 
         await this.ref.orderByKey().limitToLast(1).once("value", function(snapshot: any) {
 
             snapshot.forEach(function(childSnapshot: any) {
-                outerSnapshot = snapshot;
+                outerSnapshot = childSnapshot;
             })
     
             outerSnapshot.forEach(function(childSnapshot: any) {
@@ -65,13 +69,14 @@ export class FirebaseDatabase {
                 innerSnapshot.session
             );
 
-            positionsArray.push(position)
+            latestPosition = position;
         });
+        return latestPosition;
     }
 
     async postPosition(body: any) : Promise<any> {
         const requestPosition: IPosition = body;    
-        let positionObj : IPosition = new Position();
+        const positionObj : IPosition = new Position();
         const sessionId = requestPosition.session;
 
         positionObj.addDateToPosition(requestPosition)
