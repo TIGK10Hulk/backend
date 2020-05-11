@@ -44,13 +44,21 @@ app.post('/positions', async (req: express.Request, res: express.Response) => {
 // POST postions from a array in jsonstring format
 app.post('/positions/array', async (req: express.Request, res: express.Response) => {
     const jsonarray = req.body
-    jsonarray.forEach((element: any) => {
+    console.log("Jsonarray pos0: "+ jsonarray[0])
+
+    jsonarray.forEach(async (element: any) => {
+        await delay(110)
+
         db.postPosition(JSON.parse(element))
         .catch(error => res.status(500).json({message: "Error: " + error.message}))
         .then(() => res.status(200).json("Successfully posted positions: "))
         .catch()
     });
 })
+
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 const api = functions.https.onRequest(app)
 

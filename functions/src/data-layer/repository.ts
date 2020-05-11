@@ -79,7 +79,7 @@ export class FirebaseDatabase {
         const positionObj : IPosition = new Position();
         const sessionId = requestPosition.session;
 
-        positionObj.addDateToPosition(requestPosition)
+        await positionObj.addDateToPosition(requestPosition)
         .then((position) => {
             this.db.ref('positions'+'/'+sessionId).push(position)
         }).catch((error) => {
