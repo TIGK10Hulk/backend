@@ -47,7 +47,7 @@ app.post('/positions/array', async (req: express.Request, res: express.Response)
     console.log("Jsonarray pos0: "+ jsonarray[0])
 
     jsonarray.forEach(async (element: any) => {
-        await delay(110)
+        await delay(400)
 
         db.postPosition(JSON.parse(element))
         .catch(error => res.status(500).json({message: "Error: " + error.message}))
