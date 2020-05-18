@@ -56,12 +56,15 @@ app.post('/positions/array', async (req: express.Request, res: express.Response)
     });
 })
 
+// SUPPORT FUNCTION for adding a slight delay 
 function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
+// Declaring the api object for export
 const api = functions.https.onRequest(app)
 
+// Exporting the api object, ready for receiving calls
 module.exports = {
     api
 };
